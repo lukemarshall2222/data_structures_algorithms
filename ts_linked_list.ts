@@ -54,10 +54,7 @@ class LinkedList<T> {
 
 /* ---------------------- Insert Member Functions ---------------------------------------------------------------------------------------------- */
 
-    push(val?: T | null) : void {
-        if (val === undefined) {
-            val = null;
-        }
+    push(val: T | null) : void {
         const newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
@@ -68,10 +65,7 @@ class LinkedList<T> {
         this.head = newNode;
     }
 
-    append(val?: T | null) : void {
-        if (val === undefined) {
-            val = null;
-        }
+    append(val: T | null) : void {
         const newNode = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
@@ -85,10 +79,7 @@ class LinkedList<T> {
         newNode.setPrev(curr);
     }
 
-    insertBefore(pos: ListNode<T>, val?: T | null) : void {
-        if (val === undefined) {
-            val = null;
-        }
+    insertBefore(pos: ListNode<T>, val: T | null) : void {
         const newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
@@ -109,10 +100,7 @@ class LinkedList<T> {
         }
     }
 
-    insertAfter(pos: ListNode<T>, val?: T | null) : void {
-        if (val === undefined) {
-            val = null;
-        }
+    insertAfter(pos: ListNode<T>, val: T | null) : void {
         const newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
@@ -130,11 +118,7 @@ class LinkedList<T> {
         }
     }
 
-    insertAtPos(pos: number, val? : T | null) {
-        if (val === undefined) {
-            val = null;
-        }
-
+    insertAtPos(pos: number, val : T | null) {
         const newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
@@ -158,7 +142,101 @@ class LinkedList<T> {
 
 /* ---------------------- Deletion Member Functions ---------------------------------------------------------------------------------------------- */
 
+    pop() : T | null {
+        if (this.isEmpty()) {
+            return null;
+        }
+        if (this.head) {
+            const tmp : T | null = this.head?.getVal()
+            this.head = this.head?.getNext();
+            if (this.head) {
+                this.head.setPrev(null);
+            }
+            return tmp;
+        } 
+        return null;
+    } 
     
+    deqeue() : T | null {
+        if (this.isEmpty()) {
+            return null;
+        }
+        let curr : ListNode<T> | null | undefined = this.head;
+        while (curr?.getNext() !== null) {
+            curr = curr?.getNext();
+        } 
+        const val : T | null = curr.getVal();
+        if (curr.getPrev() !== null) {
+            curr.getPrev()?.setNext(null);
+        }
+        return val;
+    }
+
+    removeBefore(node : ListNode<T> | null) : T | null {
+        if (node === null) {
+             return null;
+        }
+        if (this.isEmpty()) {
+            return null;
+        }
+        let curr : ListNode<T> | null | undefined = this.head;
+        while (curr !== null) {
+            if (curr === node) {
+                if (curr.getPrev() !== null) {
+                    const tmp : T | null = curr.getPrev()?.getVal() ?? null;
+                    if (curr.getPrev()?.getPrev() !== null) {
+                        curr.getPrev()?.getPrev()?.setNext(curr);
+                        curr.setPrev(curr.getPrev()?.getPrev() ?? null);
+                    } else {
+                        this.head = curr;
+                        this.head.setPrev(null);
+                    }
+                    return tmp;
+                }
+            } else {
+                curr = curr?.getNext();
+            }
+        }
+        return null;
+    }
+
+    removeAfter(node : ListNode<T> | null) : T | null {
+        if (node === null) {
+            return null;
+        }
+        if (this.isEmpty()) {
+            return null;
+        }
+        let curr : ListNode<T> | null | undefined = this.head;
+        while (curr !== null ) {
+            if (curr === node) {
+                if (curr.getNext() !== null) {
+                    const tmp : T | null = curr.getNext()?.getVal() ?? null;
+                    if (curr.getNext()?.getNext()) {
+                        curr.setNext(curr.getNext()?.getNext() ?? null);
+                        curr.getNext()?.getNext()?.setPrev(curr);
+                    } else {
+                        curr.setNext(null);
+                    }
+                    return tmp;
+                } 
+            } else {
+                curr = curr?.getNext();
+            }
+        }
+        return null;
+    }
+
+    removeAtPos(pos : number) : T | null {
+        if (pos > this.length()) {
+            return null;
+        }
+        let curr : ListNode<T> | null | undefined = this.head;
+        for (let i = 0; i < pos; i++) {
+            curr = curr?.getNext();
+        }
+        return this.removeBefore(curr ?? null);
+    }
 
 /* ---------------------- Utility Member Functions ---------------------------------------------------------------------------------------------- */
 
@@ -177,6 +255,16 @@ class LinkedList<T> {
             length++;
         }
         return length;
+    }
+
+    printList() : void {
+        if (this.isEmpty()) {
+            console.log("The linked list is empty.");
+        }
+        let curr : ListNode<T> | null = this.head;
+        while (curr !== null) {
+            console.log(curr.getVal());
+        }
     }
 
     clear() : void {
