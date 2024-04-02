@@ -137,7 +137,7 @@ class LinkedList<T> {
             this.head = curr;
         }
         curr?.setPrev(newNode);
-        
+      
     }
 
 /* ---------------------- Deletion Member Functions ---------------------------------------------------------------------------------------------- */
@@ -170,6 +170,45 @@ class LinkedList<T> {
             curr.getPrev()?.setNext(null);
         }
         return val;
+    }
+
+    deleteNode(node : ListNode<T> | null) : T | null {
+        if (node === null) {
+            return null;
+        }
+        let curr : ListNode<T> | null | undefined = this.head;
+        while (curr !== null) {
+            if (curr === node) {
+                if (curr === this.head) {
+                    this.head = curr.getNext();
+                } else {
+                    curr.getPrev()?.setNext(curr.getNext());
+                }
+                if (curr.getNext() !== null) {
+                    curr.getNext()?.setPrev(curr.getPrev());
+                }
+                return curr.getVal();
+            }
+        }
+        return null; 
+    }
+
+    deleteVal(val : T) : T | null {
+        let curr : ListNode<T> | null | undefined = this.head;
+        while (curr !== null) {
+            if (curr.getVal() === val) {
+                if (curr === this.head) {
+                    this.head = curr.getNext();
+                } else {
+                    curr.getPrev()?.setNext(curr.getNext());
+                }
+                if (curr.getNext() !== null) {
+                    curr.getNext()?.setPrev(curr.getPrev());
+                }
+                return curr.getVal();
+            }
+        }
+        return null; 
     }
 
     removeBefore(node : ListNode<T> | null) : T | null {
@@ -233,9 +272,12 @@ class LinkedList<T> {
         }
         let curr : ListNode<T> | null | undefined = this.head;
         for (let i = 0; i < pos; i++) {
+            if (curr?.getNext() == null) {
+                return null;
+            }
             curr = curr?.getNext();
         }
-        return this.removeBefore(curr ?? null);
+        return this.deleteNode(curr ?? null);
     }
 
 /* ---------------------- Utility Member Functions ---------------------------------------------------------------------------------------------- */

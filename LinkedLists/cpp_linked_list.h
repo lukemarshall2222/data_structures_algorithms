@@ -23,6 +23,9 @@ public:
     T getVal();
     ListNode<T>* getPrev();
     ListNode<T>* getNext();
+
+    // operators:
+    bool operator==(const ListNode& rhs) const;
 };
 
 template <typename T>
@@ -31,26 +34,28 @@ class LinkedList {
 
 public:
     // Constructor: headVal defaults to null
-    LinkedList(T headVal=nullptr) { head = new ListNode(val=headVal)};
+    LinkedList() { this->head = nullptr};
     // Destructor: 
     ~LinkedList();
 
     // Insert Member Functions:
     void push(T val);
     void append(T val);
-    void insertBefore(T val);
-    void insertAfter(T val);
+    void insertBefore(T val, ListNode<T>& before);
+    void insertAfter(T val, ListNode<T>& after);
     void insertAtPos(T val, int pos);
 
     // Deletion Member Functions:
     T pop();
     T dequeue();
-    T removeBefore(ListNode<T> node);
-    T removeAfter(ListNode<T> node);
+    T deleteNode(ListNode<T>& node);
+    T deleteVal(T val);
+    T removeBefore(ListNode<T>& before);
+    T removeAfter(ListNode<T>& after);
     T removeAtPos(int pos);
 
     //Utility Member Functions:
-    bool isEmpty() { return head == nullptr; };
+    bool isEmpty() { return this->head == nullptr; };
     int length();
     void printList();
     void clear();

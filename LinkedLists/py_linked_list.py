@@ -149,17 +149,12 @@ class Linked_list():
     
     def delete_pos(self, val: int) -> None:
         curr = self.__head
-        for i in range(val-1):
+        for i in range(val):
             if (next := curr.get_next()) is not None:
                 curr = next
             else:
                 return
-        if curr == self.__head:
-            self.__head = curr.get_next()
-        if curr.get_prev() is not None:
-            curr.get_prev().set_next(curr.get_next())
-        if curr.get_next() is not None:
-            curr.get_next().set_prev(curr.get_prev)
+        self.delete_node(curr)
 
     # ---------- Traversal Methods -----------------------------------------------------------------------------------------------------------------
     
