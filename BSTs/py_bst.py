@@ -54,19 +54,21 @@ class BST():
     PREORDER = 2
     POSTORDER = 3
 
+    # Constructor:
     def __init__(self, head_val: Any=None):
         if (head_val is not None):
-            self.__head = TreeNode(val=head_val)
+            self.__root = TreeNode(val=head_val)
         else:
-            self.__head = None
+            self.__root = None
 
+    # Insertion:
     def insertNode(self, val) -> None:
         newNode = TreeNode(val)
         if (self.isEmpty()):
-            self.__head = newNode
+            self.__root = newNode
             return
         
-        curr = parent = self.__head
+        curr = parent = self.__root
         while curr is not None:
             parent = curr
             curr = curr.get_right() if val > curr.get_val() else curr.get_left()
@@ -78,8 +80,9 @@ class BST():
         
         newNode.set_parent(parent)
 
+    # Search:
     def search(self, val: Any) -> Union[TreeNode, None]:
-        curr = self.__head
+        curr = self.__root
         while curr is not None:
             if curr.get_val() == val:
                 return curr
@@ -87,11 +90,12 @@ class BST():
         
         return None
     
-    def deleteNode(self, val: Any) -> TreeNode:
+    # Deletion:
+    def deleteNode(self, val: Any) -> None:
         if val is None or self.isEmpty():
             return None
         
-        curr = self.__head
+        curr = self.__root
         left = True
         while curr is not None:
             if curr.get_val() == val:
@@ -127,64 +131,8 @@ class BST():
             curr.set_val(tmp)
             self.deleteNode(val)
         
-        return curr
-
-
     
-    def __iter__(self):
-        return self.inorder()
-    
-    def inorder(self):
-        return self.__traverse(self.__head, BST.INORDER)
-    
-    def preorder(self):
-        return self.__traverse(self.__head, BST.PREORDER)
-    
-    def postorder(self):
-        return self.__traverse(self.__head, BST.POSTORDER)
-
-    def __traverse(self, curr: TreeNode, traversal_type: int) -> Iterator:
-        if curr is None:
-            return
-        
-        match traversal_type:
-            case BST.INORDER:
-                yield from self.__traverse(curr.get_left())
-                yield curr.get_val()
-                yield from self.__traverse(curr.get_right())
-            case BST.PREORDER:
-                yield curr.get_val()
-                yield from curr.get_left()
-                yield from curr.get_right()
-            case BST.POSTORDER:
-                yield from curr.get_left()
-                yield from curr.get_right()
-                yield curr.get_val() 
-    
-    def get_max(self, node: Union[TreeNode, None]) -> TreeNode:
-        if node is None:
-            return None
-        curr = node
-        while (right := curr.get_right()) is not None:
-            curr = right
-        else:
-            return curr
-        
-    def get_min(self, node: Union[TreeNode, None]) -> TreeNode:
-        if node is None:
-            return None
-        curr = node
-        while (left := curr.get_left()) is not None:
-            curr = left
-        else:
-            return curr
-        
-    def tree_max(self) -> TreeNode:
-        return self.get_max(self.__head)
-    
-    def tree_min(self) -> TreeNode:
-        return self.get_min(self.__head)
-    
+    # Find successor:
     def successor(self, node: TreeNode) -> TreeNode:
         if (right := node.get_right()) is not None:
             return self.get_min(right)
@@ -196,6 +144,7 @@ class BST():
             parent = parent.get_parent()
         return parent
     
+    # Find predecessor
     def predecessor(self, node: TreeNode) -> TreeNode:
         if (left := node.get_left()) is not None:
             return self.get_max(left)
@@ -207,10 +156,96 @@ class BST():
             parent = parent.get_parent()
         return parent
     
+    # Tree Sort:
+    def treeSort(self) -> list[Any]:
+        return [val for val in self.inorder()]
 
+    # --------------------------- Iterator Methods ----------------------------------------------------------------------------------------------------
 
+    # Iterator:
+    def __iter__(self):
+        return self.inorder()
+    
+    # inorder iterative traversal:
+    def inorder(self):
+        return self.__traverse(self.__root, BST.INORDER)
+    
+    # preorder iterative traversal:
+    def preorder(self):
+        return self.__traverse(self.__root, BST.PREORDER)
+    
+    # postorder iterative traversal:
+    def postorder(self):
+        return self.__traverse(self.__root, BST.POSTORDER)
 
+    # Iternal traversal tool
+    def __traverse(self, curr: TreeNode, traversal_type: int) -> Iterator:
+        if curr is None:
+            return
+        
+        match traversal_type:
+            case BST.INORDER:
+                yield from self.__traverse(curr.get_left(), traversal_type)
+                yield curr.get_val()
+                yield from self.__traverse(curr.get_right(), traversal_type)
+            case BST.PREORDER:
+                yield curr.get_val()
+                yield from self.__traverse(curr.get_left(), traversal_type)
+                yield from self.__traverse(curr.get_right(), traversal_type)
+            case BST.POSTORDER:
+                yield from self.__traverse(curr.get_left(), traversal_type)
+                yield from self.__traverse(curr.get_right(), traversal_type)
+                yield curr.get_val() 
+    
+    # --------------------------- Utility Methods ----------------------------------------------------------------------------------------------------
 
+    # Subtree maximum
+    def get_max(self, node: Union[TreeNode, None]) -> TreeNode:
+        if node is None:
+            return None
+        curr = node
+        while (right := curr.get_right()) is not None:
+            curr = right
+        else:
+            return curr
+        
+    # Substree minimum
+    def get_min(self, node: Union[TreeNode, None]) -> TreeNode:
+        if node is None:
+            return None
+        curr = node
+        while (left := curr.get_left()) is not None:
+            curr = left
+        else:
+            return curr
+        
+    # BST maximum
+    def tree_max(self) -> TreeNode:
+        return self.get_max(self.__root)
+    
+    # BST minimum
+    def tree_min(self) -> TreeNode:
+        return self.get_min(self.__root)
+    
+    
+    # emptiness checker:
     def isEmpty(self):
-        return self.__head == None
+        return self.__root == None
+    
+    # height calculator:
+    def height(self, node: TreeNode) -> int:
+        if node is None:
+            return -1
+        else:
+            return 1 + max(self.height(node.get_left()), self.height(node.get_right()))
+        
+    # number of nodes in a subtree calculator:
+    def __population(self, node: TreeNode) -> int:
+        if node is None:
+            return 0
+        else:
+            return 1 + self.__population(node.get_left()) + self.__population(node.get_right())
 
+    # number of nodes in the BST calculator    
+    def tree_population(self):
+        return self.__population(self.__root)
