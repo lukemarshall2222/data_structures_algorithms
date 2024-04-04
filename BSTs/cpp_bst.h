@@ -2,7 +2,11 @@
 
 
 #include <vector>
+#include <iostream>
+
 using namespace std;
+
+
 template <typename T>
 class TreeNode {
     T val;
@@ -32,29 +36,44 @@ public:
 };
 
 template <typename T>
-class LinkedList {
+class BST {
     TreeNode<T>* root;
     enum {
         INORDER = 1,
         PREORDER = 2,
-        POSTORDER = 3
+        POSTORDER = 3,
+        LEVELORDER = 4
     };
 
     class Iterator {
+        const BST<T>& tree;
         TreeNode<T>* curr;
-        Iterator() : curr(this->head) {};
-        TreeNode<T>* iterateInorder();
-        bool resetIterator();
+        int order;
+        vector<TreeNode<T>*> nodeQueue;
+        Iterator() { std::cout << "Iterator is inopperable without reference to a tree and type of iteration." << std::endl }
+        Iterator(BST<T>& treeRef, int order=1) : tree(treeRef) order(order) { curr = tree.getRoot() };
+        void queueInorder() const;
+        void queuePreorder() const;
+        void queuePostorder() const;
+        void queueLevelorder() const;
+        void queueUp() const;
+    
+
+    public:
+        TreeNode<T>* iterate() const;
+        bool resetIterator() const;
     };
-    const vector<T>& traverse(TreeNode<T>* node, int traversal_type) const;
+
+    Iterator iterator;
 
 public:
     // Constructor:
-    LinkedList(T val=nullptr);
+    BST(T val=nullptr);
 
     // Destructor:
-    ~LinkedList();
+    ~BST();
 
+    TreeNode<T>* getRoot() { return this.root }
     void Insert(T val);
     TreeNode<T>* search() const;
     void deleteNode();
@@ -62,9 +81,7 @@ public:
     TreeNode<T>* predecessor() const:
     
     const vector<T>& treeSort() const;
-    const vector<T>& inorder()const;
-    const vector<T>& preorder()const;
-    const vector<T>& postorder()const;
+    TreeNode<T>* iterate(int order) const;
     TreeNode<T>* getMax(TreeNode<T>* node) const;
     TreeNode<T>* getMin(TreeNode<T>* node) const;
     TreeNode<T>* treeMax() const { return getMax(this->root); }
