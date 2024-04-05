@@ -16,7 +16,7 @@ class TreeNode {
 
 public:
     // Constructor:
-    TreeNode(T val, TreeNode<T>* parent, <T>* right, TreeNode<T>* left) : 
+    TreeNode(T val, TreeNode<T>* parent=nullptr, <T>* right=nullptr, TreeNode<T>* left=nullptr) : 
                    val(val), parent(parent), right(right), left(left) {}
 
     // Destructor:
@@ -47,11 +47,10 @@ class BST {
 
     class Iterator {
         const BST<T>& tree;
-        TreeNode<T>* curr;
         int order;
         vector<TreeNode<T>*> nodeQueue;
         Iterator() { std::cout << "Iterator is inopperable without reference to a tree and type of iteration." << std::endl }
-        Iterator(BST<T>& treeRef, int order=1) : tree(treeRef) order(order) { curr = tree.getRoot() };
+        Iterator(BST<T>& treeRef, int order=1) : tree(treeRef) order(order) {};
         void queueInorder() const;
         void queuePreorder() const;
         void queuePostorder() const;
@@ -80,7 +79,7 @@ public:
     TreeNode<T>* successor() const;
     TreeNode<T>* predecessor() const:
     
-    const vector<T>& treeSort() const;
+    vector<T>& treeSort() const;
     TreeNode<T>* iterate(int order) const;
     TreeNode<T>* getMax(TreeNode<T>* node) const;
     TreeNode<T>* getMin(TreeNode<T>* node) const;
