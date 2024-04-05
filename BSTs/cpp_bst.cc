@@ -43,7 +43,7 @@ BST<T>::BST(T val) {
 }
 
 template <typename T>
-BST<T>::~BST(T val) {
+BST<T>::~BST() {
 
 }
 
