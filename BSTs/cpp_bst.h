@@ -2,7 +2,7 @@
 
 
 #include <vector>
-#include <iostream> 
+#include <iostream>
 
 using namespace std;
 
@@ -64,22 +64,23 @@ class BST {
     };
 
     Iterator iterator;
+    void traverseDelete(TreeNode<T>* node);
 
 public:
     // Constructor:
-    BST(T val=nullptr);
+    BST(T val=NULL);
 
     // Destructor:
     ~BST();
 
     TreeNode<T>* getRoot() { return this.root }
     void Insert(T val);
-    TreeNode<T>* search() const;
+    TreeNode<T>* search(T val) const;
     void deleteNode();
-    TreeNode<T>* successor() const;
-    TreeNode<T>* predecessor() const:
+    TreeNode<T>* successor(TreeNode<T>* node) const;
+    TreeNode<T>* predecessor(TreeNode<T>* node) const:
     
-    vector<T>& treeSort() const;
+    vector<T>& treeSort();
     TreeNode<T>* iterate(int order) const;
     TreeNode<T>* getMax(TreeNode<T>* node) const;
     TreeNode<T>* getMin(TreeNode<T>* node) const;
