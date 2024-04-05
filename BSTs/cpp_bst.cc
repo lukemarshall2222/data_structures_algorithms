@@ -38,6 +38,16 @@ bool BST<T>::Iterator::resetIterator() const {
 }
 
 template <typename T>
+BST<T>::BST(T val) {
+
+}
+
+template <typename T>
+BST<T>::~BST(T val) {
+
+}
+
+template <typename T>
 void BST<T>::Insert(T val) {}
 
 template <typename T>
