@@ -63,7 +63,31 @@ void BST<T>::traverseDelete(TreeNode<T>* node) {
 }
 
 template <typename T>
-void BST<T>::Insert(T val) {}
+void BST<T>::Insert(T val) {
+    TreeNode<T>* newNode = new TreeNode<T>(val);
+    if (isEmpty()) {
+        this->root = newNode;
+        return;
+    }
+    TreeNode<T>* parent, *curr = this->root;
+    T currVal;
+    while(curr != nullptr) {
+        currVal = curr->getVal();
+        if (currVal == val) {
+            delete newNode;
+            return;
+        } else if (currVal < val) {
+            curr = curr->getRight();
+        } else {
+            curr = curr->getLeft();
+        }
+    }
+    if (curr == parent->getLeft()) {
+        parent->setLeft(newNode);
+    } else {
+        parent->setRight(newNode);
+    }
+}
 
 template <typename T>
 TreeNode<T>* BST<T>::search(T val) const {
@@ -90,14 +114,31 @@ void BST<T>::deleteNode() {}
 
 template <typename T>
 TreeNode<T>* BST<T>::successor(TreeNode<T>* node) const {
-    if (node->getLeft() != nullptr) {
-        return getMax(node->getLeft());
+    if (node->getRight() != nullptr) {
+        return getMin(node->getRight());
     }
-    
+
+    TreeNode<T>* curr = node, *parent = node->getParent();
+    while ((parent != nullptr) && (curr == parent->getRight())) {
+        curr = parent;
+        parent = parent->getParent();
+    }
+    return parent;
 }
 
 template <typename T>
-TreeNode<T>* BST<T>::predecessor(TreeNode<T>* node) const {}
+TreeNode<T>* BST<T>::predecessor(TreeNode<T>* node) const {
+    if (node->getLeft() != nullptr) {
+        return getMax(node->getLeft());
+    }
+
+    TreeNode<T>* curr = node, *parent = node->getParent();
+    while ((parent != nullptr) && (curr != parent->getLeft())) {
+        curr = parent;
+        parent = parent->getParent();
+    }
+    return parent;
+}
 
 template <typename T>
 vector<T>& BST<T>::treeSort() {}
@@ -106,10 +147,22 @@ template <typename T>
 TreeNode<T>* BST<T>::iterate(int order) const {}
 
 template <typename T>
-TreeNode<T>* BST<T>::getMax(TreeNode<T>* node) const {}
+TreeNode<T>* BST<T>::getMax(TreeNode<T>* node) const {
+    TreeNode<T>* curr = this->root;
+    while ((left = curr->getLeft) != nullptr) {
+        curr = left;
+    }
+    return curr;
+}
 
 template <typename T>
-TreeNode<T>* BST<T>::getMin(TreeNode<T>* node) const {}
+TreeNode<T>* BST<T>::getMin(TreeNode<T>* node) const {
+    TreeNode<T>* curr = this->root;
+    while ((right = curr->getRight()) != nullptr) {
+        curr = right;
+    }
+    return curr;
+}
 
 template <typename T>
 int BST<T>::height(TreeNode<T>* node) const {}
