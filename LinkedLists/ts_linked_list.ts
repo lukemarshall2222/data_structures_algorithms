@@ -55,7 +55,7 @@ class LinkedList<T> {
 /* ---------------------- Insert Member Functions ---------------------------------------------------------------------------------------------- */
 
     push(val: T | null) : void {
-        const newNode : ListNode<T> = new ListNode<T>(val);
+        let newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
             return;
@@ -66,7 +66,7 @@ class LinkedList<T> {
     }
 
     append(val: T | null) : void {
-        const newNode = new ListNode<T>(val);
+        let newNode = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
             return;
@@ -80,7 +80,7 @@ class LinkedList<T> {
     }
 
     insertBefore(pos: ListNode<T>, val: T | null) : void {
-        const newNode : ListNode<T> = new ListNode<T>(val);
+        let newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
             return;
@@ -101,7 +101,7 @@ class LinkedList<T> {
     }
 
     insertAfter(pos: ListNode<T>, val: T | null) : void {
-        const newNode : ListNode<T> = new ListNode<T>(val);
+        let newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
             return;
@@ -119,7 +119,7 @@ class LinkedList<T> {
     }
 
     insertAtPos(pos: number, val : T | null) {
-        const newNode : ListNode<T> = new ListNode<T>(val);
+        let newNode : ListNode<T> = new ListNode<T>(val);
         if (this.isEmpty()) {
             this.head = newNode;
             return;
