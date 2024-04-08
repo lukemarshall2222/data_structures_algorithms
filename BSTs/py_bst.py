@@ -108,27 +108,30 @@ class BST():
                 left = True
         else:
             return None
-        
-        if (curr.get_left() is None) and (curr.get_right() is None):
-            if left:
-                curr.get_parent().set_left(None)
+                
+        if (curr.get_left() is None) and (curr.get_right() is None): # Case 1: node has no children
+            if (parent := curr.get_parent()) == None:
+                self.__root = None
+            elif left: 
+                parent.set_left(None)
             else:
-                curr.get_parent().set_right(None)
-
-        elif (curr.get_left() is not None) or (curr.get_right() is not None):
+                parent.set_right(None)
+        elif (((curr.get_left() is not None) or (curr.get_right() is not None)) 
+                and (curr.get_right() != curr.get_left())): # Case 2: node has one child
             child = curr.get_left() if curr.get_left() is not None else curr.get_right()
             grandparent = curr.get_parent()
-            if curr == grandparent.get_right():
+            if grandparent is None:
+                self.__root = child
+            elif curr == grandparent.get_right():
                 grandparent.set_right(child)
             else:
                 grandparent.set_left(child)
             child.set_parent(grandparent)
-        
         else:
             successor = self.successor(curr)
-            tmp = successor.get_val()
+            tmpVal = successor.get_val()
             successor.set_val(curr.get_val())
-            curr.set_val(tmp)
+            curr.set_val(tmpVal)
             self.deleteNode(val)
         
     

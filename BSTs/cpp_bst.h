@@ -2,9 +2,9 @@
 
 
 #include <vector>
+#include <deque>
+#include <algorithm>
 #include <iostream>
-
-using namespace std;
 
 
 template <typename T>
@@ -16,7 +16,7 @@ class TreeNode {
 
 public:
     // Constructor:
-    TreeNode(T val, TreeNode<T>* parent=nullptr, <T>* right=nullptr, TreeNode<T>* left=nullptr) : 
+    TreeNode(T val, TreeNode<T>* parent=nullptr, TreeNode<T>* right=nullptr, TreeNode<T>* left=nullptr) : 
                    val(val), parent(parent), right(right), left(left) {}
 
     // Destructor:
@@ -37,7 +37,10 @@ public:
 
 template <typename T>
 class BST {
+
     TreeNode<T>* root;
+
+    // traversal types for iteration
     enum {
         INORDER = 1,
         PREORDER = 2,
@@ -45,26 +48,39 @@ class BST {
         LEVELORDER = 4
     };
 
+    // Iterator class allows for creation of specified traversal through the tree as deque and then
+    // stepwise iterate through that traversal
     class Iterator {
+        // Reference to tree:
         const BST<T>& tree;
-        int order;
-        vector<TreeNode<T>*> nodeQueue;
-        Iterator() { std::cout << "Iterator is inopperable without reference to a tree and type of iteration." << std::endl }
-        Iterator(BST<T>& treeRef, int order=1) : tree(treeRef) order(order) {};
+        // deque to hold nodes from tree in specified traversal order:
+        std::deque<TreeNode<T>*> nodeDeque;
+
+        // Constructors:
+        Iterator() { std::cout << "Iterator is inopperable without reference to a tree." << std::endl; }
+        Iterator(BST<T>& treeRef) : tree(treeRef) {};
+
+        // Queueing:
         void queueInorder() const;
         void queuePreorder() const;
         void queuePostorder() const;
         void queueLevelorder() const;
-        void queueUp() const;
+        void queueUp(const TreeNode<T>* const node, int traversalType=INORDER) const;
     
 
     public:
+        // Functions for iteration used by BST
         TreeNode<T>* iterate() const;
         bool resetIterator() const;
     };
 
+    // Iterator:
     Iterator iterator;
+
+    // Helpers:
     void traverseDelete(TreeNode<T>* node);
+    void traverseInorder(TreeNode<T>* node, std::vector<T>& list);
+
 
 public:
     // Constructor:
@@ -73,20 +89,26 @@ public:
     // Destructor:
     ~BST();
 
-    TreeNode<T>* getRoot() { return this.root }
+    // Tree manipulation:
     void Insert(T val);
+    void deleteNode(T val);
+    std::vector<T> treeSort() const;
+
+    // Finding nodes:
     TreeNode<T>* search(T val) const;
-    void deleteNode();
     TreeNode<T>* successor(TreeNode<T>* node) const;
-    TreeNode<T>* predecessor(TreeNode<T>* node) const:
-    
-    vector<T>& treeSort();
-    TreeNode<T>* iterate(int order) const;
+    TreeNode<T>* predecessor(TreeNode<T>* node) const;
+    TreeNode<T>* getRoot() { return this->root; }
     TreeNode<T>* getMax(TreeNode<T>* node) const;
     TreeNode<T>* getMin(TreeNode<T>* node) const;
     TreeNode<T>* treeMax() const { return getMax(this->root); }
     TreeNode<T>* treeMin() const { return getMin(this->root); }
 
+    // Iteration:
+    void initIterator(int order=INORDER) const;
+    TreeNode<T>* iterate() const;
+
+    // Utility:
     bool isEmpty() const { return this->root == nullptr; }
     int height(TreeNode<T>* node) const;
     int population(TreeNode<T>* node) const;
