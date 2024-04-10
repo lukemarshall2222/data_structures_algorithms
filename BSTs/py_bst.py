@@ -1,6 +1,7 @@
 """ Binary search tree in python. """
 
 from typing import Any, Union, Iterator
+from collections import deque
 
 
 #======================================================================================================================================================================================================
@@ -53,6 +54,7 @@ class BST():
     INORDER = 1
     PREORDER = 2
     POSTORDER = 3
+    LEVELORDER = 4
 
     # Constructor:
     def __init__(self, head_val: Any=None):
@@ -199,6 +201,19 @@ class BST():
                 yield from self.__traverse(curr.get_left(), traversal_type)
                 yield from self.__traverse(curr.get_right(), traversal_type)
                 yield curr.get_val() 
+            case BST.LEVELORDER:
+                dq = deque([])
+                dq.append(curr)
+                while len(dq) > 0:
+                    node = dq.popleft()
+
+                    if ((left := node.get_left()) != None):
+                        node.append(left)
+
+                    if ((right := node.get_right()) != None):
+                        node.append(right)
+
+                    yield node.get_val()
     
     # --------------------------- Utility Methods ----------------------------------------------------------------------------------------------------
 
