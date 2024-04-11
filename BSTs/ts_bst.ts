@@ -149,7 +149,7 @@ class BST<T>{
 
     successor(node : TreeNode<T>) : TreeNode<T> | null {
         if (node.getRight() !== null) {
-            return this.getMin(node.getRight());
+            return this.getMin(node.getRight()!);
         }
 
         let curr : TreeNode<T> = node;
@@ -161,8 +161,69 @@ class BST<T>{
         return parent;
     }
 
+    predecessor(node : TreeNode<T>) : TreeNode<T> | null {
+        if (node.getLeft() !== null) {
+            return this.getMin(node.getRight()!);
+        }
+
+        let curr : TreeNode<T> = node;
+        let parent : TreeNode<T> | null = node.getParent();
+        while ((parent !== null) && (curr === parent.getRight())) {
+            curr = parent;
+            parent = parent.getParent();
+        }
+        return parent;
+    }
+
+    private getMin(node : TreeNode<T> | null) : TreeNode<T> | null {
+        let curr : TreeNode<T> | null = node;
+        while (curr?.getLeft() !== null) {
+            curr = curr!.getLeft();
+        }
+        return curr;
+    }
+
+    private getMax(node : TreeNode<T> | null) : TreeNode<T> | null {
+        let curr : TreeNode<T> | null = node;
+        while (curr?.getRight() !== null) {
+            curr = curr!.getRight();
+        }
+        return curr;
+    }
+
+    treeMin() : TreeNode<T> | null {
+        return this.getMin(this.root);
+    }
+
+    treeMax() : TreeNode<T> | null {
+        return this.getMax(this.root);
+    }
 
     isEmpty() : boolean {
         return this.root === null;
+    }
+
+    private height(node : TreeNode<T> | null) : number {
+        if (this.isEmpty()) {
+            return 0;
+        } else if (node === null) {
+            return -1;
+        }
+        return 1 + Math.max(this.height(node.getLeft()), this.height(node.getRight()));
+    }
+
+    treeHeight() : number {
+        return this.height(this.root);
+    }
+
+    private population(node : TreeNode<T> | null) {
+        if (node === null) {
+            return 0;
+        }
+        return 1 + this.population(node.getLeft()) + this.population(node.getRight());
+    }
+
+    treePopulation() {
+        return this.population(this.root);
     }
 }

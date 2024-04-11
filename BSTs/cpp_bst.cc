@@ -365,8 +365,10 @@ bool isEmpty() const { return this->root == nullptr; }
 template <typename T>
 int BST<T>::height(TreeNode<T>* node) const {
     /* Returns: the maximum height of a subtree with a root at node */
-    if (node == nullptr) {
+    if (this->isEmpty()) {
         return 0;
+    } else if (node == nullptr) {
+        return -1;
     }
     return 1 + std::max(height(node->getLeft()), height(node->getRight()));
 }
