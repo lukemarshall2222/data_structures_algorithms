@@ -175,6 +175,52 @@ class BST<T>{
         return parent;
     }
 
+    *[Symbol.iterator]() : Generator<void, Generator<T, void, unknown>, unknown> {
+        return this.inorder();
+    }
+
+    inorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.INORDER);
+    }
+
+    private *traverse(node: TreeNode<T> | null, traversalType: number) : Generator<T, void, unknown> {
+        if (node === null) {
+            return;
+        }
+        switch (traversalType) {
+            case BST.INORDER:
+                yield* this.traverse(node.getLeft(), BST.INORDER);
+                yield node.getVal();
+                yield* this.traverse(node.getRight(), BST.INORDER);
+            case BST.PREORDER:
+                yield node.getVal();
+                yield* this.traverse(node.getLeft(), BST.PREORDER);
+                yield* this.traverse(node.getRight(), BST.PREORDER);
+            case BST.POSTORDER:
+                yield* this.traverse(node.getLeft(), BST.POSTORDER);
+                yield* this.traverse(node.getRight(), BST.POSTORDER);
+                yield node.getVal();
+            case BST.LEVELORDER:
+                let queue : TreeNode<T>[]= [];
+                let curr : TreeNode<T> | null;
+                queue.push(node);
+                while (queue.length > 0) {
+                    curr = queue[0];
+                    queue.shift();
+
+                    if (curr.getLeft() !== null) {
+                        queue.push(curr.getLeft()!);
+                    }
+
+                    if (curr.getRight() !== null) {
+                        queue.push(curr.getRight()!);
+                    }
+
+                    yield curr.getVal();
+                };
+        }
+    }
+
     private getMin(node : TreeNode<T> | null) : TreeNode<T> | null {
         let curr : TreeNode<T> | null = node;
         while (curr?.getLeft() !== null) {
