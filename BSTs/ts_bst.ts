@@ -154,7 +154,21 @@ export class BST<T>{
 
     successor(node : TreeNode<T>) : TreeNode<T> | null {
         if (node.getRight() !== null) {
-            return this.getMin(node.getRight());
+            return this.getMin(node.getRight()!);
+        }
+
+        let curr : TreeNode<T> = node;
+        let parent : TreeNode<T> | null = node.getParent();
+        while ((parent !== null) && (curr === parent.getRight())) {
+            curr = parent;
+            parent = parent.getParent();
+        }
+        return parent;
+    }
+
+    predecessor(node : TreeNode<T>) : TreeNode<T> | null {
+        if (node.getLeft() !== null) {
+            return this.getMin(node.getRight()!);
         }
 
         let curr : TreeNode<T> = node;
@@ -174,6 +188,18 @@ export class BST<T>{
         return this.traverse(this.root, BST.INORDER);
     }
 
+    preorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.PREORDER);
+    }
+
+    postorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.POSTORDER);
+    }
+    
+    levelorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.LEVELORDER);
+    }
+
     private *traverse(node: TreeNode<T> | null, traversalType: number) : Generator<T, void, unknown> {
         if (node === null) {
             return;
@@ -183,21 +209,23 @@ export class BST<T>{
                 yield* this.traverse(node.getLeft(), BST.INORDER);
                 yield node.getVal();
                 yield* this.traverse(node.getRight(), BST.INORDER);
+                break;
             case BST.PREORDER:
                 yield node.getVal();
                 yield* this.traverse(node.getLeft(), BST.PREORDER);
                 yield* this.traverse(node.getRight(), BST.PREORDER);
+                break;
             case BST.POSTORDER:
                 yield* this.traverse(node.getLeft(), BST.POSTORDER);
                 yield* this.traverse(node.getRight(), BST.POSTORDER);
                 yield node.getVal();
+                break;
             case BST.LEVELORDER:
                 let queue : TreeNode<T>[]= [];
                 let curr : TreeNode<T> | null;
                 queue.push(node);
                 while (queue.length > 0) {
-                    curr = queue[0];
-                    queue.shift();
+                    curr = queue.shift()!;
 
                     if (curr.getLeft() !== null) {
                         queue.push(curr.getLeft()!);
@@ -209,11 +237,59 @@ export class BST<T>{
 
                     yield curr.getVal();
                 };
+                break;
         }
     }
 
+    private getMin(node : TreeNode<T> | null) : TreeNode<T> | null {
+        let curr : TreeNode<T> | null = node;
+        while (curr?.getLeft() !== null) {
+            curr = curr!.getLeft();
+        }
+        return curr;
+    }
+
+    private getMax(node : TreeNode<T> | null) : TreeNode<T> | null {
+        let curr : TreeNode<T> | null = node;
+        while (curr?.getRight() !== null) {
+            curr = curr!.getRight();
+        }
+        return curr;
+    }
+
+    treeMin() : TreeNode<T> | null {
+        return this.getMin(this.root);
+    }
+
+    treeMax() : TreeNode<T> | null {
+        return this.getMax(this.root);
+    }
 
     isEmpty() : boolean {
         return this.root === null;
+    }
+
+    private height(node : TreeNode<T> | null) : number {
+        if (this.isEmpty()) {
+            return 0;
+        } else if (node === null) {
+            return -1;
+        }
+        return 1 + Math.max(this.height(node.getLeft()), this.height(node.getRight()));
+    }
+
+    treeHeight() : number {
+        return this.height(this.root);
+    }
+
+    private population(node : TreeNode<T> | null) {
+        if (node === null) {
+            return 0;
+        }
+        return 1 + this.population(node.getLeft()) + this.population(node.getRight());
+    }
+
+    treePopulation() {
+        return this.population(this.root);
     }
 }

@@ -252,10 +252,15 @@ class BST():
     
     # height calculator:
     def height(self, node: TreeNode) -> int:
-        if node is None:
+        if self.isEmpty():
+            return 0
+        elif node is None:
             return -1
-        else:
-            return 1 + max(self.height(node.get_left()), self.height(node.get_right()))
+        return 1 + max(self.height(node.get_left()), self.height(node.get_right()))
+    
+    # tree height calculator:
+    def tree_height(self) -> int:
+        return self.height(self.__root)
         
     # number of nodes in a subtree calculator:
     def __population(self, node: TreeNode) -> int:
