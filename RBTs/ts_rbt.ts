@@ -3,14 +3,14 @@
 import { TreeNode, BST } from "../BSTs/ts_bst";
 
 
-export class RBTnode<T> extends TreeNode<T> {
+export class RBTnode extends TreeNode<number> {
 
     static readonly BLACK : number = 0;
     static readonly RED : number = 1;
 
     color : number;
 
-    constructor(val : T, parent : RBTnode<T> | null=null, right : RBTnode<T> | null=null, left : RBTnode<T> | null=null) {
+    constructor(val : number, parent : RBTnode | null=null, right : RBTnode | null=null, left : RBTnode| null=null) {
         super(val, parent, left, right);
         this.color = RBTnode.BLACK;
     }
@@ -24,13 +24,13 @@ export class RBTnode<T> extends TreeNode<T> {
     }
 }
 
-export class RBT<T> extends BST<T> {
+export class RBT extends BST<number> {
 
-    sentinel : RBTnode<T>;
+    sentinel : RBTnode;
 
-    constructor(val : T | null) {
+    constructor(val : number | null) {
         super(val);
-        this.sentinel = new RBTnode(null);
+        this.sentinel = new RBTnode(-1);
         if (val !== null) {
             this.root = new RBTnode(val);
         } else {
