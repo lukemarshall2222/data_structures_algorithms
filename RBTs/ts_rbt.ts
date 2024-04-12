@@ -26,14 +26,17 @@ export class RBTnode<T> extends TreeNode<T> {
 
 export class RBT<T> extends BST<T> {
 
+    sentinel : RBTnode<T>;
+
     constructor(val : T | null) {
         super(val);
+        this.sentinel = new RBTnode(null);
         if (val !== null) {
             this.root = new RBTnode(val);
         } else {
-            this.root = null;
+            this.root = this.sentinel;
         }
     }
 
-    
+
 }

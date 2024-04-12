@@ -1,7 +1,7 @@
 /* BST in TypeScript */
 
-class TreeNode<T> {
-    val : T;
+export class TreeNode<T> {
+    val : T | null;
     parent : TreeNode<T> | null;
     right : TreeNode<T> | null;
     left : TreeNode<T> | null;
@@ -14,7 +14,7 @@ class TreeNode<T> {
         this.left = left;
     }
 
-    getVal() : T {
+    getVal() : T | null {
         return this.val;
     }
 
@@ -47,7 +47,7 @@ class TreeNode<T> {
     }
 }
 
-class BST<T>{ 
+export class BST<T>{ 
     // root node:
     root : TreeNode<T> | null;
 
@@ -78,9 +78,11 @@ class BST<T>{
         let parent : TreeNode<T> | null = null;
         let curr : TreeNode<T> | null = this.root;
         while (curr !== null) {
-            if (curr.getVal() === val) {
+            if (curr.getVal() === null) {
+                throw new Error("null found as value in a node.");
+            } else if (curr.getVal() === val) {
                 return;
-            } else if (curr.getVal() < val) {
+            } else if (curr.getVal()! < val) {
                 parent = curr;
                 curr = curr.getRight();
             } else {
@@ -88,7 +90,7 @@ class BST<T>{
                 curr = curr.getLeft();
             }
         }
-        if (parent && parent.getVal() < val) {
+        if (parent && parent.getVal()! < val) {
             parent.setRight(newNode);
         } else {
             parent?.setLeft(newNode);
@@ -101,9 +103,12 @@ class BST<T>{
     search(val : T) : TreeNode<T> | null {
         let curr : TreeNode<T> | null = this.root;
         while (curr !== null) {
-            if (curr.getVal() === val) {
+            if (curr.getVal() === null) {
+                throw new Error("null found as value in a node.")
+            }
+            else if (curr.getVal() === val) {
                 return curr;
-            } else if (curr.getVal() < val) {
+            } else if (curr.getVal()! < val) {
                 curr = curr.getRight();
             } else {
                 curr = curr.getLeft();
@@ -139,8 +144,8 @@ class BST<T>{
                 }
             } else {
                 let successor : TreeNode<T> = this.successor(node)!;
-                let tmpVal : T = successor.getVal();
-                successor.setVal(node.getVal());
+                let tmpVal : T = successor.getVal()!;
+                successor.setVal(node.getVal()!);
                 node.setVal(tmpVal);
                 this.deleteNode(val);
             }
