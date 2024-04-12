@@ -183,6 +183,18 @@ class BST<T>{
         return this.traverse(this.root, BST.INORDER);
     }
 
+    preorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.PREORDER);
+    }
+
+    postorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.POSTORDER);
+    }
+    
+    levelorder() : Generator<T, void, unknown> {
+        return this.traverse(this.root, BST.LEVELORDER);
+    }
+
     private *traverse(node: TreeNode<T> | null, traversalType: number) : Generator<T, void, unknown> {
         if (node === null) {
             return;
@@ -192,21 +204,23 @@ class BST<T>{
                 yield* this.traverse(node.getLeft(), BST.INORDER);
                 yield node.getVal();
                 yield* this.traverse(node.getRight(), BST.INORDER);
+                break;
             case BST.PREORDER:
                 yield node.getVal();
                 yield* this.traverse(node.getLeft(), BST.PREORDER);
                 yield* this.traverse(node.getRight(), BST.PREORDER);
+                break;
             case BST.POSTORDER:
                 yield* this.traverse(node.getLeft(), BST.POSTORDER);
                 yield* this.traverse(node.getRight(), BST.POSTORDER);
                 yield node.getVal();
+                break;
             case BST.LEVELORDER:
                 let queue : TreeNode<T>[]= [];
                 let curr : TreeNode<T> | null;
                 queue.push(node);
                 while (queue.length > 0) {
-                    curr = queue[0];
-                    queue.shift();
+                    curr = queue.shift()!;
 
                     if (curr.getLeft() !== null) {
                         queue.push(curr.getLeft()!);
@@ -218,6 +232,7 @@ class BST<T>{
 
                     yield curr.getVal();
                 };
+                break;
         }
     }
 
