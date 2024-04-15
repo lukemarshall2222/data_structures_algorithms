@@ -180,27 +180,27 @@ export class BST<T>{
         return parent;
     }
 
-    *[Symbol.iterator]() : Generator<void, Generator<T, void, unknown>, unknown> {
+    *[Symbol.iterator]() : Generator<void, Generator<T | null, void, unknown>, unknown> {
         return this.inorder();
     }
 
-    inorder() : Generator<T, void, unknown> {
+    inorder() : Generator<T | null, void, unknown> {
         return this.traverse(this.root, BST.INORDER);
     }
 
-    preorder() : Generator<T, void, unknown> {
+    preorder() : Generator<T | null, void, unknown> {
         return this.traverse(this.root, BST.PREORDER);
     }
 
-    postorder() : Generator<T, void, unknown> {
+    postorder() : Generator<T | null, void, unknown> {
         return this.traverse(this.root, BST.POSTORDER);
     }
     
-    levelorder() : Generator<T, void, unknown> {
+    levelorder() : Generator<T | null, void, unknown> {
         return this.traverse(this.root, BST.LEVELORDER);
     }
 
-    private *traverse(node: TreeNode<T> | null, traversalType: number) : Generator<T, void, unknown> {
+    private *traverse(node: TreeNode<T> | null, traversalType: number) : Generator<T | null, void, unknown> {
         if (node === null) {
             return;
         }

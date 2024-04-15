@@ -38,5 +38,30 @@ export class RBT extends BST<number> {
         }
     }
 
+    private leftRotate(curr : RBTnode) : void {
+        let rChild : RBTnode = curr.getRight()! as RBTnode;
+        let glChild : RBTnode = rChild.getLeft()! as RBTnode;
+        let parent : RBTnode = curr.getParent() as RBTnode;
 
+        curr.setRight(glChild);
+        if (glChild !== this.sentinel) {
+            glChild.setParent(curr);
+        }
+
+        rChild.setParent(parent);
+        if (parent === this.sentinel) {
+            this.root = rChild;
+        } else if (curr === parent.getLeft()) {
+            parent.setLeft(rChild);
+        } else {
+            parent.setRight(rChild);
+        }
+
+        rChild.setLeft(curr);
+        curr.setParent(rChild);
+    }
+
+    private rightRotate(curr : RBTnode): void {
+        
+    }
 }
