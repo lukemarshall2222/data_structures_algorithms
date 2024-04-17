@@ -8,7 +8,7 @@ export class RBTnode extends TreeNode<number> {
     static readonly BLACK : number = 0;
     static readonly RED : number = 1;
 
-    color : number;
+    private color : number;
 
     constructor(val : number, parent : RBTnode | null=null, right : RBTnode | null=null, left : RBTnode| null=null) {
         super(val, parent, left, right);
@@ -62,6 +62,6 @@ export class RBT extends BST<number> {
     }
 
     private rightRotate(curr : RBTnode): void {
-        
+
     }
 }

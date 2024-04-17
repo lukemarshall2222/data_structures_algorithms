@@ -1,6 +1,7 @@
 """unweighted nondirectional graph representaion in python"""
 
 from collections import deque
+from prettytable import prettytable
 
 class GraphNode():
 
@@ -43,7 +44,7 @@ class GraphNode():
         return self.__color
     
 
-class Graph():
+class NodeGraph():
 
     def __init__(self, root: GraphNode=None) -> None:
         self.root : GraphNode = root
@@ -75,11 +76,73 @@ class Graph():
     def DFS(self, val: int) -> GraphNode:
         pass
 
-    def adjacencyList(self) -> str:
-        pass
-
-    def adjacencyTable(self) -> str:
-        pass
-
     def isEmpty(self) -> bool:
         return self.root == None
+    
+class LinkedListnode():
+    def __init__(self, name: str, next: 'LinkedListnode') -> None:
+        self.__name = name
+        self.__next = next
+
+    def getName(self):
+        return self.__name
+    
+    def getNext(self):
+        return self.__next
+    
+    def setNext(self, next: 'LinkedListnode'):
+        self.__next = next
+    
+class SetGraph():
+
+    def __init__(self, Vertices: set[str], Edges: set[set[str]]):
+        self.__vertices = Vertices
+        self.__edges = Edges
+        for edge in self.__edges:
+            if len(edge) != 2:
+                raise AttributeError(f"edge {edge} does not meet criteria for an edge, the set must contain two edges.")
+            for vertex in edge:
+                if vertex not in self.__vertices:
+                    self.__vertices.add(vertex)
+    
+    def getVertices(self):
+        return self.__vertices
+    
+    def getEdges(self):
+        return self.__edges
+    
+    def adjacencyDict(self) -> dict[str, set[str]]:
+        adjacencies : dict[str, set[str]] = {vertex : set() for vertex in self.__vertices}
+        for edge in self.__edges:
+            vertex1, vertex2 = tuple(edge)
+            if vertex1 not in adjacencies or vertex2 not in adjacencies:
+                raise KeyError(f"""Attempt made to access a nonexistent vertex in adjacencies dict in adjacencyDict function 
+                                  based on edge which contains the vertices {vertex1, vertex2}""")
+            adjacencies[vertex1].add(vertex2)
+            adjacencies[vertex2].add(vertex1)
+        return adjacencies
+    
+    def adjacencyList(self) -> list[LinkedListnode]:
+        adjacencyDict : dict[str, set[str]] = self.adjacencyDict()
+        adjacencyList : list[LinkedListnode] = []
+        for vertex, adjacencies in adjacencyDict.items():
+            head : LinkedListnode = LinkedListnode(vertex)
+            curr : LinkedListnode = head
+            for vert in adjacencies:
+                curr.setNext(LinkedListnode(vert))
+                curr = curr.getNext()
+            adjacencyList.append(head)
+
+        return adjacencyList
+    
+    def adjacencyTable(self) -> list[list[int]]:
+        vertices : list[str] = sorted(list(self.__vertices))
+        vertexIndices = {vertex : index for index, vertex in enumerate(vertices)}
+        adjacencyDict : dict[str, set[str]] = self.adjacencyDict()
+        adjacencyTable : list[list[int]] = [[0 for _ in range(len(vertices))] 
+                                            for _ in range(len(vertices))]
+        for vertex in vertices:
+            for adjacenct in adjacencyDict[vertex]:
+                adjacencyTable[vertexIndices[vertex]][vertexIndices[adjacenct]] = 1
+        
+        return adjacencyTable
