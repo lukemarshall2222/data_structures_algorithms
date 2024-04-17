@@ -235,7 +235,7 @@ export class BST<T>{
         }
     }
 
-    private getMin(node : TreeNode<T> | null) : TreeNode<T> | null {
+    getMin(node : TreeNode<T> | null) : TreeNode<T> | null {
         let curr : TreeNode<T> | null = node;
         while (curr?.getLeft() !== null) {
             curr = curr!.getLeft();
@@ -243,7 +243,7 @@ export class BST<T>{
         return curr;
     }
 
-    private getMax(node : TreeNode<T> | null) : TreeNode<T> | null {
+    getMax(node : TreeNode<T> | null) : TreeNode<T> | null {
         let curr : TreeNode<T> | null = node;
         while (curr?.getRight() !== null) {
             curr = curr!.getRight();

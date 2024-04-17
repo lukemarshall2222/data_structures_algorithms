@@ -150,8 +150,105 @@ export class RBT extends BST<number> {
         root.setColor(RBTnode.BLACK);
     }
 
-   deleteNode(node: RBTnode): void {
-       
+
+    private transplant(u : RBTnode, v : RBTnode) : void {
+        if (u.getParent() === this.sentinel) {
+            this.root = v;
+        } else if (u === u.getParent()!.getLeft()) {
+            u.getParent()!.setLeft(v);
+        } else {
+            u.getParent()!.setRight(v);
+        }
+        v.setParent(u.getParent());
+    }
+
+    deleteNode(z: RBTnode): void {
+        let y : RBTnode = z;
+        let yOriginalColor : number = y.getColor();
+        let x : RBTnode;
+        if (z.getLeft() as RBTnode === this.sentinel) {
+            x = z.getRight() as RBTnode;
+            this.transplant(z, z.getRight()! as RBTnode);
+        } else if (z.getRight() as RBTnode === this.sentinel) {
+            x = z.getLeft()! as RBTnode;
+            this.transplant(z, z.getLeft() as RBTnode);
+        } else {
+            y = this.getMin(z.getRight()) as RBTnode;
+            yOriginalColor = y.getColor();
+            x = y.getRight()! as RBTnode;
+            if (y !== z.getRight() as RBTnode) {
+                this.transplant(y, y.getRight()! as RBTnode);
+                y.setRight(z.getRight());
+                y.getRight()!.setParent(y);
+            } else {
+                x.setParent(y);
+            }
+            this.transplant(z, y);
+            y.setLeft(z.getLeft());
+            y.getLeft()!.setParent(y);
+            y.setColor(z.getColor());
+        }
+        if (yOriginalColor === RBTnode.BLACK) {
+            this.deleteFixup(x);
+        }
    }
+
+    private deleteFixup(x : RBTnode) {
+        let w : RBTnode = this.sentinel;
+        while ((x !== this.root) && (x.getColor() === RBTnode.BLACK)) {
+            if (x === x.getParent()!.getLeft() as RBTnode) {
+                w = x.getParent()!.getRight() as RBTnode;
+                if (w.getColor() === RBTnode.RED) {
+                    w.setColor(RBTnode.BLACK);
+                    (<RBTnode>w.getParent()).setColor(RBTnode.RED);
+                    this.leftRotate(x.getParent()! as RBTnode);
+                    w = x.getParent()!.getRight() as RBTnode;
+                }
+                if (((<RBTnode>w.getLeft()).getColor() === RBTnode.BLACK) && 
+                    ((<RBTnode>w.getRight()).getColor() === RBTnode.BLACK)) {
+                        w.setColor(RBTnode.RED);
+                        x = x.getParent() as RBTnode;
+                } else {
+                        if ((<RBTnode>w.getRight()).getColor() === RBTnode.BLACK) {
+                            (<RBTnode>w.getLeft()).setColor(RBTnode.BLACK);
+                            w.setColor(RBTnode.RED);
+                            this.rightRotate(w);
+                            w = x.getParent()!.getRight() as RBTnode;
+                        }
+                        w.setColor((<RBTnode>x.getParent()).getColor());
+                        (<RBTnode>x.getParent()).setColor(RBTnode.BLACK);
+                        (<RBTnode>w.getRight()).setColor(RBTnode.BLACK);
+                        this.leftRotate(x.getParent() as RBTnode);
+                        x = this.root! as RBTnode;
+                }
+            } else {
+                w = x.getParent()!.getLeft() as RBTnode;
+                if (w.getColor() === RBTnode.RED) {
+                    w.setColor(RBTnode.BLACK);
+                    (<RBTnode>w.getParent()).setColor(RBTnode.RED);
+                    this.rightRotate(x.getParent()! as RBTnode);
+                    w = x.getParent()!.getLeft() as RBTnode;
+                }
+                if (((<RBTnode>w.getRight()).getColor() === RBTnode.BLACK) && 
+                    ((<RBTnode>w.getLeft()).getColor() === RBTnode.BLACK)) {
+                        w.setColor(RBTnode.RED);
+                        x = x.getParent() as RBTnode;
+                } else {
+                    if ((<RBTnode>w.getRight()).getColor() === RBTnode.BLACK) {
+                        (<RBTnode>w.getLeft()).setColor(RBTnode.BLACK);
+                        w.setColor(RBTnode.RED);
+                        this.leftRotate(w);
+                        w = x.getParent()!.getLeft() as RBTnode;
+                    }
+                    w.setColor((<RBTnode>x.getParent()).getColor());
+                    (<RBTnode>x.getParent()).setColor(RBTnode.BLACK);
+                    (<RBTnode>w.getLeft()).setColor(RBTnode.BLACK);
+                    this.rightRotate(x.getParent() as RBTnode);
+                    x = this.root! as RBTnode;
+                }
+            }
+        }
+        x.setColor(RBTnode.BLACK);
+    }
     
 }
