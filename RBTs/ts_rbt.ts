@@ -62,6 +62,96 @@ export class RBT extends BST<number> {
     }
 
     private rightRotate(curr : RBTnode): void {
-        
+        let lChild : RBTnode = curr.getLeft()! as RBTnode;
+        let grChild : RBTnode = lChild.getRight() as RBTnode;
+        let parent : RBTnode = curr.getParent() as RBTnode;
+
+        curr.setLeft(grChild);
+        if (grChild !== this.sentinel) {
+            grChild.setParent(curr);
+        }
+
+        lChild.setParent(parent);
+        if (parent === this.sentinel) {
+            this.root = lChild;
+        } else if (curr === parent.getRight()) {
+            parent.setRight(lChild);
+        } else {
+            parent.setLeft(lChild);
+        }
+
+        lChild.setRight(curr);
+        curr.setParent(lChild);
     }
+
+    insertNode(newNode : RBTnode) : void {
+        super.insertNode(newNode);
+        newNode.setLeft(this.sentinel);
+        newNode.setRight(this.sentinel);
+        newNode.setColor(RBTnode.RED);
+        if (newNode.getParent() === null) {
+            newNode.setParent(this.sentinel);
+        }
+        this.insertFixup(newNode);
+    }
+
+    private insertFixup(node: RBTnode) : void {
+        let curr : RBTnode = node;
+        let parent : RBTnode = curr.getParent()! as RBTnode;
+        let gParent : RBTnode = curr.getParent()! as RBTnode;
+        let uncle : RBTnode;
+
+        while (parent.getColor() === RBTnode.RED) {
+            parent = curr.getParent()! as RBTnode;
+            gParent = parent.getParent()! as RBTnode;
+            if (parent === gParent.getLeft()) {
+                uncle = gParent.getRight()! as RBTnode;
+
+                // Case 1:
+                if (uncle.getColor() === RBTnode.RED) {
+                    parent.setColor(RBTnode.BLACK);
+                    uncle.setColor(RBTnode.BLACK);
+                    gParent.setColor(RBTnode.RED);
+                    curr = gParent;
+                } else {
+                    if (curr === parent.getRight()) {
+                        curr = parent;
+                        this.leftRotate(curr);
+                        parent = curr.getParent()! as RBTnode;
+                        gParent = parent.getParent()! as RBTnode;
+                    }
+                    parent.setColor(RBTnode.BLACK);
+                    gParent.setColor(RBTnode.RED);
+                    this.rightRotate(gParent);
+                }
+            } else {
+                uncle = gParent.getLeft()! as RBTnode;
+
+                // Case 2:
+                if (uncle.getColor() === RBTnode.RED) {
+                    parent.setColor(RBTnode.BLACK);
+                    uncle.setColor(RBTnode.BLACK);
+                    gParent.setColor(RBTnode.RED);
+                    curr = gParent;
+                } else {
+                    if (curr === parent.getLeft()) {
+                        curr = parent;
+                        this.rightRotate(curr);
+                        parent = curr.getParent()! as RBTnode;
+                        gParent = parent.getParent()! as RBTnode;
+                    }
+                    parent.setColor(RBTnode.BLACK);
+                    gParent.setColor(RBTnode.RED);
+                    this.leftRotate(gParent);
+                }
+            }
+        }
+        let root : RBTnode = this.root! as RBTnode;
+        root.setColor(RBTnode.BLACK);
+    }
+
+   deleteNode(node: RBTnode): void {
+       
+   }
+    
 }
