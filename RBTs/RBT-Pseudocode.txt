@@ -84,86 +84,28 @@ INSERT-FIXUP(current):
 
 	set the root's color to black
 
-DELETE(deleteNode):
-	
-	if(deleteNode's left or right child == sentinal):
-		current = deleteNode
-	else:
-		current = SUCCESSOR(deleteNode)
-	
-	original = currents color
-	
-	//by this time current has at most one child
-	parent = current's parent
-	if(currents left child != sentinel):
-		child = current's left child
-	else:
-		child = current's right child
-	
-	set childs parent = parent
-	if(parent == sentinal):
-		root = child
-	else if(current == parents left child):
-		set parents left child = child
-	else:
-		set parents right child = child
-	
-	if(current != deleteNode):
-		set currents parent to deleteNode's parent
-		if(current's parent == sentinel):
-			root = current
-		else:
-			if(deleteNode is a left child):
-				set parent's left child = current
-			else:
-				set parent's right child = current
-		
-		lChild = deleteNode's left child
-		rChild = deleteNode's right child
-		set currents left child = lChild
-		set currents right child = rChild
-		set rChilds parent = current
-		set lChilds parent = current
-		set currents color = deleteNode's color
-	
-	delete deleteNode since we no longer need it
-	if(original == black):
-		DELETE-FIXUP(child)
-		
-		
-DELETE-FIXUP(current):
-	while(current != root and current's color is black):
-		parent = get the current nodes parent
-		if(current == parents left child):
-			sibling = get parents right child;
-			
-			//case 1
-			if(siblings color is red):
-				set siblings color to black
-				set the parents color to red
-				LEFT-ROTATE(parent)
-				parent = currents new parent
-				sibling = parents right child;
-			
-			//case 2
-			if(both of siblings children are black):
-				set siblings color to red
-				current = parent
-			else:
-				//case 3-4
-				if(siblings right child is black):
-					set the color of the left child of sibling to black
-					set siblings color to red
-					RIGHT-ROTATE(sibling)
-					parent = currents new parent
-					sibling = parents right child;
-				set the siblings color to the parents color
-				set the parents color to black
-				set the color of the siblings right child to black
-				LEFT-ROTATE(parent)
-				current = root
-		else:
-			same as above with left and right switched
-	
-	set currents color to black
-
+RB-DELETE(T, x)
+     BST-DELETE(T, x)
+     while x ≠ T.root and x.color == BLACK
+        if x == x.parent.left
+            s = x.parent.right
+            if s.color == RED
+                s.color = BLACK // case 3.1
+                x.parent.color = RED // case 3.1
+                LEFT-ROTATE(T, x.parent) // case 3.1
+                s = x.parent.right // case 3.1
+            if s.left.color == BLACK and s.right.color == BLACK
+                s.color = RED // case 3.2
+                x = x.parent //case 3.2
+            else if s.right.color == BLACK
+                    s.left.color = BLACK // case 3.3
+                    s.color = RED //case 3.3
+                    RIGHT-ROTATE(T, s) // case 3.3
+                    s = x.parent.right // case 3.3
+                s.color = x.parent.right // case 3.4
+                x.parent.color = BLACK // case 3.4
+                s.right.color = BLACK // case 3.4
+                LEFT-ROTATE(T, x.parent) // case 3.4
+                x = T.root
+        else (same as then close with “right” and “left” exchanged)
+    x.color = BLACK

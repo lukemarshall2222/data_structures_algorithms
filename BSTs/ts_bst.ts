@@ -69,20 +69,15 @@ export class BST<T>{
         return this.root;
     }
 
-    insertNode(val : T) : void {
-        let newNode : TreeNode<T> = new TreeNode<T>(val);
-        if (this.isEmpty()) {
-            this.root = newNode;
-        }
-
+    insertNode(newNode : TreeNode<T>) : void {
         let parent : TreeNode<T> | null = null;
         let curr : TreeNode<T> | null = this.root;
         while (curr !== null) {
             if (curr.getVal() === null) {
                 throw new Error("null found as value in a node.");
-            } else if (curr.getVal() === val) {
+            } else if (curr.getVal() === newNode.getVal()!) {
                 return;
-            } else if (curr.getVal()! < val) {
+            } else if (curr.getVal()! < newNode.getVal()!) {
                 parent = curr;
                 curr = curr.getRight();
             } else {
@@ -90,7 +85,7 @@ export class BST<T>{
                 curr = curr.getLeft();
             }
         }
-        if (parent && parent.getVal()! < val) {
+        if (parent && parent.getVal()! < newNode.getVal()!) {
             parent.setRight(newNode);
         } else {
             parent?.setLeft(newNode);
@@ -117,8 +112,7 @@ export class BST<T>{
         return null;
     }
 
-    deleteNode(val : T) : void {
-        let node : TreeNode<T> | null = this.search(val);
+    deleteNode(node : TreeNode<T>) : void {
         if (node !== null) {
             if (node.getLeft() === null && node.getRight() === null) { // Case 1: node has no children
                 if (node === this.root) {
