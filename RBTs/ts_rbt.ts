@@ -98,7 +98,7 @@ export class RBT extends BST<number> {
     private insertFixup(node: RBTnode) : void {
         let curr : RBTnode = node;
         let parent : RBTnode = curr.getParent()! as RBTnode;
-        let gParent : RBTnode = curr.getParent()! as RBTnode;
+        let gParent : RBTnode = parent.getParent()! as RBTnode;
         let uncle : RBTnode;
 
         while (parent.getColor() === RBTnode.RED) {
@@ -107,7 +107,6 @@ export class RBT extends BST<number> {
             if (parent === gParent.getLeft()) {
                 uncle = gParent.getRight()! as RBTnode;
 
-                // Case 1:
                 if (uncle.getColor() === RBTnode.RED) {
                     parent.setColor(RBTnode.BLACK);
                     uncle.setColor(RBTnode.BLACK);
@@ -146,8 +145,7 @@ export class RBT extends BST<number> {
                 }
             }
         }
-        let root : RBTnode = this.root! as RBTnode;
-        root.setColor(RBTnode.BLACK);
+        (<RBTnode>this.root).setColor(RBTnode.BLACK);
     }
 
 

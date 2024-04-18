@@ -10,7 +10,7 @@ from collections import deque
 
 class TreeNode():
 
-    def __init__(self, val=None, parent : 'TreeNode'=None, left : 'TreeNode'=None, right : 'TreeNode'=None) -> None:
+    def __init__(self, val, parent : 'TreeNode'=None, left : 'TreeNode'=None, right : 'TreeNode'=None) -> None:
         self.__val = val
         self.__parent = parent
         self.__right = right
@@ -57,15 +57,14 @@ class BST():
     LEVELORDER = 4
 
     # Constructor:
-    def __init__(self, head_val: Any=None):
+    def __init__(self, head_val: int=None):
         if (head_val is not None):
             self.__root = TreeNode(val=head_val)
         else:
             self.__root = None
 
     # Insertion:
-    def insertNode(self, val) -> None:
-        newNode = TreeNode(val)
+    def insertNode(self, newNode: TreeNode) -> None:
         if (self.isEmpty()):
             self.__root = newNode
             return
@@ -73,9 +72,9 @@ class BST():
         curr = parent = self.__root
         while curr is not None:
             parent = curr
-            curr = curr.get_right() if val > curr.get_val() else curr.get_left()
+            curr = curr.get_right() if newNode.get_val() > curr.get_val() else curr.get_left()
 
-        if parent.get_val() < val:
+        if parent.get_val() < newNode.get_val():
             parent.set_right(newNode)
         else:
             parent.set_left(newNode)
